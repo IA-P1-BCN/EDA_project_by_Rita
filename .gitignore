@@ -1,0 +1,8 @@
+# Archivo de contexto para Claude Code (uso local)
+CLAUDE.md
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
