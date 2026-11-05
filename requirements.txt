@@ -1,6 +1,10 @@
 pandas==3.0.6
+numpy
 matplotlib
 seaborn
+plotly
+scipy
 requests
 jupyter
 ipykernel
+pytest

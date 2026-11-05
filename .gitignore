@@ -6,3 +6,7 @@ CLAUDE.md
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Python and pytest caches
+__pycache__/
+.pytest_cache/
