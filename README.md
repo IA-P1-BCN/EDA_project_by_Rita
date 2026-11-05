@@ -32,9 +32,11 @@ The analysis is framed around how advertising drives user acquisition and engage
 ## 🛠️ Tech Stack
 
 - Python 3.11
-- Pandas for loading, cleaning and analysis
-- Matplotlib and Seaborn for visualization
-- Requests for downloading the dataset
+- Pandas and NumPy for loading, cleaning and analysis
+- Matplotlib, Seaborn and Plotly for visualization
+- SciPy for statistical tests
+- Requests for the second data source (US public holidays from the [Nager.Date API](https://date.nager.at))
+- Pytest for testing the cleaning code
 - Jupyter Notebook in VS Code
 
 ## 🧠 Technical Decisions
@@ -42,17 +44,31 @@ The analysis is framed around how advertising drives user acquisition and engage
 - **Conda environment (`eda-marketing`):** keeps the project dependencies isolated from other coursework and makes the Python version explicit and reproducible.
 - **Pandas 3.0:** string columns use the dedicated `str` dtype and copy-on-write is the default, which the cleaning steps take into account.
 - **Notebook as the main deliverable:** every cleaning decision is explained in a markdown cell next to the code, so the reasoning is auditable.
-- **Branch per phase:** `feature/cleaning`, `feature/eda` and `feature/report`, with small, descriptive commits.
+- **Cleaning code in `src/`, tested first:** type conversions, derived metrics, outlier flags and the holiday merge are reusable functions. Each one has pytest tests written before the function, and the notebook and the pipeline import the same code.
+- **Outliers are flagged, not removed:** high cost-per-conversion campaigns are the ones that waste budget, so they stay in the data with a `High_Cost_Outlier` flag.
+- **Holidays cached locally:** the API is called once and the result is saved to `data/us_holidays_2021.csv`, so the analysis runs offline and always uses the same data.
+- **Branch per phase:** `feature/limpieza`, `feature/eda` and `feature/informe`, merged into `main` through pull requests, with small, descriptive commits.
 
 ## 📁 Project Structure
 
 ```
 EDA_project_from_Rita/
-├── data/             # Raw dataset (CSV)
+├── data/
+│   ├── marketing_campaign_dataset.csv   # Raw dataset (Kaggle)
+│   ├── us_holidays_2021.csv             # Cached API response (second source)
+│   └── processed/                       # Pipeline output, not committed
 ├── docs/
 │   └── project_log.md   # Project log: decisions and findings per session
 ├── notebooks/        # EDA notebook
 ├── reports/          # Executive report and exported figures
+├── src/
+│   ├── cleaning.py   # Type conversions
+│   ├── features.py   # Derived metrics (CTR, CPC, CPM, cost per conversion...)
+│   ├── quality.py    # IQR outlier detection
+│   ├── holidays.py   # Nager.Date API download, cache and merge
+│   └── pipeline.py   # Runs every step and saves the processed CSV
+├── tests/            # Pytest tests for every module in src/
+├── pytest.ini
 ├── requirements.txt
 └── README.md
 ```
@@ -76,9 +92,16 @@ jupyter notebook notebooks/
 
 The CSV must be at `data/marketing_campaign_dataset.csv`. If it is missing, download it from the Kaggle link above and place it there.
 
+From the repo root, with the environment active:
+
+```bash
+pytest -v              # run the tests of the cleaning code
+python -m src.pipeline # build data/processed/campaigns_clean.csv in one command
+```
+
 ## 🗺️ Next Steps
 
-- [ ] Data cleaning and preprocessing
+- [x] Data cleaning and preprocessing
 - [ ] Exploratory analysis and visualizations per key question
 - [ ] Conclusions and recommendations
 - [ ] Executive report (PDF)
