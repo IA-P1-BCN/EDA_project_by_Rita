@@ -46,6 +46,18 @@ The analysis is framed around how advertising drives user acquisition and engage
 - [`reports/figures/`](reports/figures/): every chart from the notebook as PNG, plus an interactive Plotly chart (`q6_combinations_interactive.html`, open it in a browser).
 - [`docs/project_log.md`](docs/project_log.md): decisions and findings, one entry per working session.
 
+## 📈 Interactive Dashboard
+
+[`dashboard/app.py`](dashboard/app.py) is a Streamlit app that tells the same story as the report and lets you filter by channel, target audience, city and campaign budget. Every number updates with the filters.
+
+1. **The budget leak:** share of budget vs share of conversions by decile of cost per conversion, and how much the high-cost campaigns take.
+2. **Does the channel matter?** Median cost per conversion by channel.
+3. **Does the audience matter?** Gap of each segment, audience, city and language to the overall median, with the p-value of each dimension.
+4. **Is there a winning formula?** Split-half check of the 150 channel × campaign type × audience combinations.
+5. **Can a simple rule spot the expensive campaigns?** A slider sets the conversion rate threshold and shows how many high-cost campaigns the rule catches and how precise it is.
+
+Live version: not published yet (Streamlit Community Cloud, coming soon). To run it locally, see [Run Locally](#-run-locally).
+
 ## 🛠️ Tech Stack
 
 - Python 3.11
@@ -53,7 +65,8 @@ The analysis is framed around how advertising drives user acquisition and engage
 - Matplotlib, Seaborn and Plotly for visualization
 - SciPy for statistical tests
 - Requests for the second data source (US public holidays from the [Nager.Date API](https://date.nager.at))
-- Pytest for testing the cleaning code
+- Streamlit for the interactive dashboard
+- Pytest for testing the cleaning and dashboard code
 - Jupyter Notebook in VS Code
 
 ## 🧠 Technical Decisions
@@ -64,12 +77,15 @@ The analysis is framed around how advertising drives user acquisition and engage
 - **Cleaning code in `src/`, tested first:** type conversions, derived metrics, outlier flags and the holiday merge are reusable functions. Each one has pytest tests written before the function, and the notebook and the pipeline import the same code.
 - **Outliers are flagged, not removed:** high cost-per-conversion campaigns are the ones that waste budget, so they stay in the data with a `High_Cost_Outlier` flag.
 - **Holidays cached locally:** the API is called once and the result is saved to `data/us_holidays_2021.csv`, so the analysis runs offline and always uses the same data.
-- **Branch per phase:** `feature/limpieza`, `feature/eda` and `feature/informe`, merged into `main` through pull requests, with small, descriptive commits.
+- **Dashboard logic separate from the app:** every number the dashboard shows comes from tested functions in `src/dashboard_data.py`; `dashboard/app.py` only draws. The app rebuilds the clean data from the raw CSV with the same pipeline, so it does not depend on the uncommitted processed file.
+- **Branch per phase:** `feature/limpieza`, `feature/eda`, `feature/informe` and `feature/dashboard`, merged into `main` through pull requests, with small, descriptive commits.
 
 ## 📁 Project Structure
 
 ```
 EDA_project_by_Rita/
+├── dashboard/
+│   └── app.py           # Streamlit dashboard
 ├── data/
 │   ├── marketing_campaign_dataset.csv   # Raw dataset (Kaggle)
 │   ├── us_holidays_2021.csv             # Cached API response (second source)
@@ -89,8 +105,9 @@ EDA_project_by_Rita/
 │   ├── quality.py       # IQR outlier detection
 │   ├── holidays.py      # Nager.Date API download, cache and merge
 │   ├── significance.py  # Kruskal-Wallis test with effect size
-│   └── pipeline.py      # Runs every step and saves the processed CSV
-├── tests/               # Pytest tests for every module in src/ (31 tests)
+│   ├── pipeline.py      # Runs every step and saves the processed CSV
+│   └── dashboard_data.py  # Filters, KPIs and summaries shown in the dashboard
+├── tests/               # Pytest tests for every module in src/ (42 tests)
 ├── pytest.ini
 ├── requirements.txt
 └── README.md
@@ -118,9 +135,12 @@ The CSV must be at `data/marketing_campaign_dataset.csv`. If it is missing, down
 From the repo root, with the environment active:
 
 ```bash
-pytest -v              # run the tests of the cleaning code
-python -m src.pipeline # build data/processed/campaigns_clean.csv in one command
+pytest -v                       # run all the tests
+python -m src.pipeline          # build data/processed/campaigns_clean.csv in one command
+streamlit run dashboard/app.py  # open the dashboard at http://localhost:8501
 ```
+
+After changing a file in `src/`, stop the dashboard (`Ctrl + C`) and start it again: the **Rerun** button reloads the app, not the modules it imports.
 
 ## 🗺️ Next Steps
 
@@ -128,7 +148,8 @@ python -m src.pipeline # build data/processed/campaigns_clean.csv in one command
 - [x] Exploratory analysis and visualizations per key question
 - [x] Conclusions and recommendations
 - [x] Executive report (PDF) and two-page summary
-- [ ] Interactive dashboard (Streamlit)
+- [x] Interactive dashboard (Streamlit)
+- [ ] Dashboard published on Streamlit Community Cloud
 - [ ] Five-minute presentation for a non-technical audience
 
 ## 👩‍💻 Authors
