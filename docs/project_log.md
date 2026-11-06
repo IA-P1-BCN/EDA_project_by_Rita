@@ -30,7 +30,7 @@ Short record of decisions and findings, one entry per session. It is the basis f
 **What I did**
 - Finished the first inspection: `describe`, nulls, duplicates, `Campaign_ID` uniqueness, categorical value counts and the clicks vs impressions check, each with a written reading.
 - Read the official delivery levels and set the goal: Advanced level complete, Expert if time allows.
-- Cleaned the data with reusable functions in `src/`, writing the pytest tests before each function (37 tests, all passing).
+- Cleaned the data with reusable functions in `src/`, writing the pytest tests before each function (31 tests, all passing).
 - Created derived metrics: CTR, conversions, CPC, cost per conversion, CPM, month and weekday.
 - Flagged outliers with the IQR rule.
 - Added a second data source: 2021 US federal holidays from the Nager.Date API, downloaded with `requests`, cached as CSV and joined with a merge.
@@ -62,3 +62,37 @@ Short record of decisions and findings, one entry per session. It is the basis f
 **Next steps**
 - Questions 3 to 6, including a Plotly interactive chart.
 - Conclusions, then the executive report.
+
+## 2026-11-06
+
+**What I did**
+- Answered questions 3 (segments, audiences, cities, languages), 4 (duration), 5 (seasonality) and 6 (combinations and budget waste).
+- Wrote the conclusions in the notebook: answers to the six questions, three key messages, recommendations and a data quality report.
+- Merged the EDA phase into `main` with PR #3 and started `feature/informe`.
+- Profiled the high-cost campaigns: which setup attributes and which results set them apart.
+- Wrote the executive report in Spanish and English (12 pages each, PDF) and a two-page summary in Spanish, all in `reports/`. Every chart in the report is also in the notebook.
+
+**Decisions**
+- Kept the dataset even though it is flat in every dimension. Changing it would be risky this late, and the process is what is assessed.
+- Told the report as an investigation: four suspects (channel, audience, combination, budget/duration/calendar) are ruled out with tests, and the twist is that the waste sits inside every channel.
+- Applied the Bonferroni correction whenever I ran many tests at once (20 in question 3, 9 in question 5, 11 in the high-cost profile).
+- Checked the 150 channel × type × audience combinations with a split-half test (seed 42) before trusting any ranking.
+- Removed every claim about "detecting campaigns early". The dataset only has final results per campaign, so when the signal appears is a hypothesis, and the report proposes a pilot to test it.
+- Kept the full report and added a two-page summary to meet the 1 to 2 page requirement.
+
+**Findings**
+- No segment, audience, city or language is more efficient: cost per conversion from 331.5 to 337.4 USD, 0 of 20 tests significant after Bonferroni.
+- Duration and calendar are flat: median ROI 5.00 to 5.02 for every duration, monthly cost per conversion 330.5 to 341.0 USD, holidays vs normal days p = 0.688.
+- No winning combination: the best and worst of the 150 combinations (310.6 vs 366.4 USD) change completely between two random halves (Spearman −0.047, 0 of 10 in common in the top 10).
+- Budget waste: 9.2% of campaigns take 10.9% of the budget (272.1 of 2,500.9 million USD) and bring only 1.3% of conversions.
+- A final conversion rate of 2% or less flags 10.7% of campaigns and catches 58.4% of the high-cost ones, with 50.3% precision.
+- No setup attribute predicts high-cost campaigns (share between 8.9% and 9.6% in every group). Budget is the only weak link: conversions do not grow with spend (Spearman 0.001), so the high-cost share rises from 2.9% in the lowest spend quintile to 16.0% in the highest.
+
+**Known limitations (data quality)**
+- Channel and campaign type are independent (chi-square p = 0.629), including combinations that make no sense, such as Facebook with Email campaigns.
+- Duration does not change spend: median 12,500 USD at 15 days and 12,494.5 USD at 60 days.
+- No daily results per campaign, so the report cannot say how soon a costly campaign shows up.
+
+**Next steps**
+- Final README, pinned `requirements.txt` and PR #4 into `main`.
+- Expert level if time allows: Streamlit dashboard and a 5-minute presentation.
