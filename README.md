@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat&logo=python&logoColor=white&labelColor=333)
 ![Pandas](https://img.shields.io/badge/Pandas-3.0-150458?style=flat&logo=pandas&logoColor=white&labelColor=333)
-![Status](https://img.shields.io/badge/Status-In%20progress-e6b800?style=flat&labelColor=333)
+![Status](https://img.shields.io/badge/Status-Analysis%20complete-2a9d8f?style=flat&labelColor=333)
 ![Priority](https://img.shields.io/badge/Priority-High-e63946?style=flat&labelColor=333)
 
 ## 📋 Project Context
@@ -24,10 +24,27 @@ The analysis is framed around how advertising drives user acquisition and engage
 
 1. Which channels acquire users most efficiently (CTR, conversion rate, cost per conversion, ROI)?
 2. Do more impressions or higher spend translate into more engagement?
-3. Which customer segments, audiences, countries and languages respond best?
+3. Which customer segments, audiences, cities and languages respond best?
 4. Does campaign duration affect ROI or engagement?
 5. Is there seasonality or a trend over time?
 6. Which combinations of channel, campaign type and audience perform best, and which waste budget?
+
+## 🔎 Key Findings
+
+1. **No channel, audience, segment, city or language is a lever.** Median cost per conversion ranges from 330.5 to 337.4 USD across every group, and no difference survives a statistical test (Kruskal-Wallis, with Bonferroni correction when many tests run at once).
+2. **There is no winning formula.** The best and worst of the 150 channel × campaign type × audience combinations change completely when the data is split into two random halves (Spearman −0.047, 0 of 10 in common in the top 10).
+3. **Spend, duration and calendar do not matter either.** Engagement is flat across spend quintiles, ROI is the same for every duration and there is no seasonality (dates rotate by campaign ID).
+4. **The budget leaks inside every channel.** 9.2% of campaigns take 10.9% of the budget (272.1 of 2,500.9 million USD) and bring only 1.3% of conversions. A final conversion rate of 2% or less catches 58.4% of them.
+5. **Budget is the only weak pre-launch signal.** Conversions do not grow with spend, so the share of high-cost campaigns rises from 2.9% in the lowest spend quintile to 16.0% in the highest.
+6. **Data quality limits the conclusions.** The original columns are independent of each other, absolute values are unrealistic (median CTR 10%), ROI ignores costs and there is no retention or daily data. The full data quality report is in section 5.4 of the notebook.
+
+## 📄 Reports
+
+- [`reports/executive_report_es.pdf`](reports/executive_report_es.pdf): full executive report in Spanish (12 pages).
+- [`reports/executive_report_en.pdf`](reports/executive_report_en.pdf): full executive report in English (12 pages).
+- [`reports/executive_summary_es.pdf`](reports/executive_summary_es.pdf): two-page executive summary in Spanish.
+- [`reports/figures/`](reports/figures/): every chart from the notebook as PNG, plus an interactive Plotly chart (`q6_combinations_interactive.html`, open it in a browser).
+- [`docs/project_log.md`](docs/project_log.md): decisions and findings, one entry per working session.
 
 ## 🛠️ Tech Stack
 
@@ -52,22 +69,28 @@ The analysis is framed around how advertising drives user acquisition and engage
 ## 📁 Project Structure
 
 ```
-EDA_project_from_Rita/
+EDA_project_by_Rita/
 ├── data/
 │   ├── marketing_campaign_dataset.csv   # Raw dataset (Kaggle)
 │   ├── us_holidays_2021.csv             # Cached API response (second source)
 │   └── processed/                       # Pipeline output, not committed
 ├── docs/
 │   └── project_log.md   # Project log: decisions and findings per session
-├── notebooks/        # EDA notebook
-├── reports/          # Executive report and exported figures
+├── notebooks/
+│   └── 01_eda_marketing_campaigns.ipynb   # Main EDA notebook
+├── reports/
+│   ├── executive_report_es.pdf   # Full report, Spanish
+│   ├── executive_report_en.pdf   # Full report, English
+│   ├── executive_summary_es.pdf  # Two-page summary, Spanish
+│   └── figures/                  # Exported charts (PNG and Plotly HTML)
 ├── src/
-│   ├── cleaning.py   # Type conversions
-│   ├── features.py   # Derived metrics (CTR, CPC, CPM, cost per conversion...)
-│   ├── quality.py    # IQR outlier detection
-│   ├── holidays.py   # Nager.Date API download, cache and merge
-│   └── pipeline.py   # Runs every step and saves the processed CSV
-├── tests/            # Pytest tests for every module in src/
+│   ├── cleaning.py      # Type conversions
+│   ├── features.py      # Derived metrics (CTR, CPC, CPM, cost per conversion...)
+│   ├── quality.py       # IQR outlier detection
+│   ├── holidays.py      # Nager.Date API download, cache and merge
+│   ├── significance.py  # Kruskal-Wallis test with effect size
+│   └── pipeline.py      # Runs every step and saves the processed CSV
+├── tests/               # Pytest tests for every module in src/ (31 tests)
 ├── pytest.ini
 ├── requirements.txt
 └── README.md
@@ -84,8 +107,8 @@ pip install -r requirements.txt
 ## 🚀 Run Locally
 
 ```bash
-git clone https://github.com/IA-P1-BCN/EDA_project_from_Rita.git
-cd EDA_project_from_Rita
+git clone https://github.com/IA-P1-BCN/EDA_project_by_Rita.git
+cd EDA_project_by_Rita
 conda create -n eda-marketing python=3.11 -y && conda activate eda-marketing && pip install -r requirements.txt
 jupyter notebook notebooks/
 ```
@@ -102,9 +125,11 @@ python -m src.pipeline # build data/processed/campaigns_clean.csv in one command
 ## 🗺️ Next Steps
 
 - [x] Data cleaning and preprocessing
-- [ ] Exploratory analysis and visualizations per key question
-- [ ] Conclusions and recommendations
-- [ ] Executive report (PDF)
+- [x] Exploratory analysis and visualizations per key question
+- [x] Conclusions and recommendations
+- [x] Executive report (PDF) and two-page summary
+- [ ] Interactive dashboard (Streamlit)
+- [ ] Five-minute presentation for a non-technical audience
 
 ## 👩‍💻 Authors
 
