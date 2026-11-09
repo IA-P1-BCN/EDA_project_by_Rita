@@ -4,6 +4,7 @@
 ![Pandas](https://img.shields.io/badge/Pandas-3.0-150458?style=flat&logo=pandas&logoColor=white&labelColor=333)
 ![Status](https://img.shields.io/badge/Status-Analysis%20complete-2a9d8f?style=flat&labelColor=333)
 ![Priority](https://img.shields.io/badge/Priority-High-e63946?style=flat&labelColor=333)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://marketing-campaigns-rita.streamlit.app/)
 
 ## 📋 Project Context
 
@@ -43,6 +44,7 @@ The analysis is framed around how advertising drives user acquisition and engage
 - [`reports/executive_report_es.pdf`](reports/executive_report_es.pdf): full executive report in Spanish (12 pages).
 - [`reports/executive_report_en.pdf`](reports/executive_report_en.pdf): full executive report in English (12 pages).
 - [`reports/executive_summary_es.pdf`](reports/executive_summary_es.pdf): two-page executive summary in Spanish.
+- [`reports/presentation_en.pdf`](reports/presentation_en.pdf): five-minute presentation for a non-technical audience, in English (8 slides).
 - [`reports/figures/`](reports/figures/): every chart from the notebook as PNG, plus an interactive Plotly chart (`q6_combinations_interactive.html`, open it in a browser).
 - [`docs/project_log.md`](docs/project_log.md): decisions and findings, one entry per working session.
 
@@ -56,7 +58,7 @@ The analysis is framed around how advertising drives user acquisition and engage
 4. **Is there a winning formula?** Split-half check of the 150 channel × campaign type × audience combinations.
 5. **Can a simple rule spot the expensive campaigns?** A slider sets the conversion rate threshold and shows how many high-cost campaigns the rule catches and how precise it is.
 
-Live version: not published yet (Streamlit Community Cloud, coming soon). To run it locally, see [Run Locally](#-run-locally).
+**Live version: [marketing-campaigns-rita.streamlit.app](https://marketing-campaigns-rita.streamlit.app/)** (Streamlit Community Cloud, deployed from `main`). The first visit after a while can take a minute: the free tier puts idle apps to sleep. To run it locally, see [Run Locally](#-run-locally).
 
 ## 🛠️ Tech Stack
 
@@ -98,6 +100,7 @@ EDA_project_by_Rita/
 │   ├── executive_report_es.pdf   # Full report, Spanish
 │   ├── executive_report_en.pdf   # Full report, English
 │   ├── executive_summary_es.pdf  # Two-page summary, Spanish
+│   ├── presentation_en.pdf       # Five-minute presentation, English
 │   └── figures/                  # Exported charts (PNG and Plotly HTML)
 ├── src/
 │   ├── cleaning.py      # Type conversions
@@ -149,8 +152,8 @@ After changing a file in `src/`, stop the dashboard (`Ctrl + C`) and start it ag
 - [x] Conclusions and recommendations
 - [x] Executive report (PDF) and two-page summary
 - [x] Interactive dashboard (Streamlit)
-- [ ] Dashboard published on Streamlit Community Cloud
-- [ ] Five-minute presentation for a non-technical audience
+- [x] Dashboard published on Streamlit Community Cloud
+- [x] Five-minute presentation for a non-technical audience
 
 ## 👩‍💻 Authors
 
