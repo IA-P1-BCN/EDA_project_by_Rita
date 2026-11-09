@@ -96,3 +96,22 @@ Short record of decisions and findings, one entry per session. It is the basis f
 **Next steps**
 - Final README, pinned `requirements.txt` and PR #4 into `main`.
 - Expert level if time allows: Streamlit dashboard and a 5-minute presentation.
+
+## 2026-11-09
+
+**Decisions**
+- Built the Streamlit dashboard (started on 6 Nov, `feature/dashboard`) with the calculations in `src/dashboard_data.py` and tests written first. The app only draws, so its numbers can be tested and match the notebook.
+- The dashboard rebuilds the clean data from the raw CSV with the pipeline, so it runs on Streamlit Community Cloud without the uncommitted processed file.
+- The combinations chart needs at least 25 combinations and its verdict depends on the Spearman agreement, so a filter cannot produce a conclusion the data does not support.
+- The alert rule states that it uses the final conversion rate. Whether the signal appears early remains a hypothesis to test with a pilot.
+- Presentation for a non-technical audience: 8 slides in English with speaker notes, following the investigation structure of the report, and a live demo at the end. One sentence about retention in the speaker notes is marked as my opinion because the data cannot support it.
+
+**Verification**
+- Dashboard figures match the notebook and the report, checked with Streamlit `AppTest` and in the published app.
+- From a fresh clone of `feature/entrega`: 42 tests pass, the pipeline builds 200,000 rows and 26 columns, and the notebook runs top to bottom without errors.
+
+**Published**
+- Dashboard: https://marketing-campaigns-rita.streamlit.app/
+
+**Next steps**
+- Final PR into `main` and delivery.
