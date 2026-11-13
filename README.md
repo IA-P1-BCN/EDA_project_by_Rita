@@ -1,5 +1,7 @@
 # Marketing Campaign Performance: Exploratory Data Analysis
 
+<img src="media/eda_marketing_flow.png" alt="Analysis flow" width="800">
+
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat&logo=python&logoColor=white&labelColor=333)
 ![Pandas](https://img.shields.io/badge/Pandas-3.0-150458?style=flat&logo=pandas&logoColor=white&labelColor=333)
 ![Status](https://img.shields.io/badge/Status-Analysis%20complete-2a9d8f?style=flat&labelColor=333)
